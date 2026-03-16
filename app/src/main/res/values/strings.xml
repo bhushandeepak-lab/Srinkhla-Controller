@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Srinkhla Controller</string>
+    <string name="service_description">यह सर्विस स्क्रीन रीडिंग और कंट्रोल में मदद करती है।</string>
+</resources>
