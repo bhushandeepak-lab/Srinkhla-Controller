@@ -1,23 +1,16 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath "com.android.tools.build:gradle:8.2.2"
-        // यदि आप Kotlin का उपयोग कर रहे हैं, तो इसे भी जोड़ें
-        // classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22"
-    }
+plugins {
+    id 'com.android.application'
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
+android {
+    namespace 'com.srinkhla.controller'
+    compileSdk 34
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+    defaultConfig {
+        applicationId "com.srinkhla.controller"
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
 }
