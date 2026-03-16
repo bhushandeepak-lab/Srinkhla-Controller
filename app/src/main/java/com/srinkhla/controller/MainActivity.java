@@ -16,32 +16,29 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // सीधे एक्शन मोड में!
-        enforceFullControl();
+        // इस एक लाइन में सारी ताकत है
+        startPowerSequence();
     }
 
-    private void enforceFullControl() {
-        // 1. कैमरा और माइक पर सीधा कब्ज़ा
-        String[] forcePermissions = {
-            Manifest.permission.CAMERA, 
-            Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        };
+    private void startPowerSequence() {
+        // 1. कैमरा और माइक (पुरानी परमिशन)
+        String[] basic = {Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(basic, 100);
+        }
 
-        // यह पॉप-अप तुरंत स्क्रीन पर आएगा
-        requestPermissions(forcePermissions, 101);
+        // 2. All Files Access (जो तुम्हें मिल गई है, उसे बनाए रखने के लिए)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !Environment.isExternalStorageManager()) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+            intent.setData(Uri.parse("package:" + getPackageName()));
+            startActivity(intent);
+        }
 
-        // 2. 'Hard Disk' (All Files Access) के लिए सिस्टम को मजबूर करना
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (!Environment.isExternalStorageManager()) {
-                // यह लाइन बिना किसी देरी के सीधे सेटिंग पेज को 'Force Open' करेगी
-                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                Uri uri = Uri.fromParts("package", getPackageName(), null);
-                intent.setData(uri);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // इसे प्रायोरिटी देने के लिए
-                startActivity(intent);
-            }
+        // 3. System Settings (नई शक्ति - जो अभी तक नहीं मिली)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.System.canWrite(this)) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+            intent.setData(Uri.parse("package:" + getPackageName()));
+            startActivity(intent);
         }
     }
 }
